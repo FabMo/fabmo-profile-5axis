@@ -1,0 +1,80 @@
+'!FABMO!name:Untitled Macro
+'!FABMO!description:Macro Description
+'Homing for 5 Axis
+
+&XY_R_Speed = 6
+&Z_R_Speed = 1
+&AB_R_Speed = .2
+
+&XY_Speed = .25
+&Z_Speed = .5
+&ABSpeed = .2
+
+&X_Input = 2
+&Y_Input = 3
+&Z_Input = 5
+&A_Input = 7
+&B_Input = 6
+
+&X_Search_Dis = -48
+&Y_Search_Dis = -48
+&Z_Search_Dis = 24
+&A_Search_Dis = -90
+&B_Search_Dis = 360
+
+&X_offset = .5
+&Y_offset = .5
+&Z_offset = -.5
+&A_offset = 11
+&B_offset = -180
+
+GoSub home_Z
+GoSub home_X
+GoSub home_Y
+GoSub home_A
+GoSub home_B
+END
+
+home_X:
+    PX,%(1)+&X_Search_Dis,&XY_R_Speed,&X_Input
+    JX,%(1)+&X_offset
+    PX,%(1)+&X_Search_Dis,&XY_Speed,&X_Input
+    JX,%(1)+&X_offset
+	VA,0,,,,,,0,,,,,
+RETURN
+
+home_Y:
+    PY,%(2)+&Y_Search_Dis,&XY_R_Speed,&Y_Input
+    JY,%(2)+&Y_offset
+    PY,%(2)+&Y_Search_Dis,&XY_Speed,&Y_Input
+   	JY,%(2)+&Y_offset
+	VA,,0,,,,,,0,,,,
+RETURN
+
+home_Z:
+    PZ,%(3)+&Z_Search_Dis,&Z_R_Speed,&Z_Input
+    JZ,%(3)+&Z_offset
+    PZ,%(3)+&Z_Search_Dis,&Z_Speed,&Z_Input
+   	JZ,%(3)+&Z_offset
+	VA,,,0,,,,,,0,,,
+RETURN
+
+'The A is not stopping.  Blows by the switch
+
+home_A:
+    PA,%(4)+&A_Search_Dis,&AB_R_Speed,&A_Input
+    JA,%(4)+&A_offset
+    PA,%(4)+&A_Search_Dis,&AB_R_Speed,&A_Input
+   	MA,%(4)+&A_offset
+	VA,,,,0,,,,,,0,,
+RETURN
+
+home_B:
+    PB,%(5)+&B_Search_Dis,&AB_R_Speed,&B_Input
+    JB,%(5)+&B_offset
+    PB,%(5)+&B_Search_Dis,&AB_R_Speed,&B_Input
+   	MB,%(5)+&B_offset
+	VA,,,,,0,,,,,,0,
+RETURN
+
+

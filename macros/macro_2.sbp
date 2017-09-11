@@ -1,0 +1,46 @@
+'!FABMO!name:Z-Zero
+'!FABMO!description:Define the zero position for the Z by searching for a contact surface.
+' -------- Settings Section --------
+' Values in this section may be changed to suit different homing configurations
+' Note that these are WEAK assignments - meant to convey the defaults.
+&ZZeroInput := 1
+
+&ZZeroSearchDistance := -6.0
+&ZZeroSearchSpeedSlow := 0.1
+&ZZeroSearchSpeedFast := 0.5
+&ZZeroPlateThickness := 0.57 ' 0.118 for electrical plate 0.57 for pressure plate
+
+&ZZeroBackoffInitial := 0.2
+&ZZeroBackoffFinal := 0.5
+
+' -------- Main Program Section --------
+GOSUB check_input
+GOSUB find_z_zero
+END
+
+find_z_zero:
+	GOSUB get_positions
+    PZ,&zpos+&ZZeroSearchDistance,&ZZeroSearchSpeedFast,&ZZeroInput
+    &value = %(3)
+    ZZ
+    JZ,&ZZeroBackoffInitial
+	ZZ
+    &reapproach = -2*&ZZeroBackoffInitial
+    PZ,&reapproach,&ZZeroSearchSpeedSlow,&ZZeroInput
+    ZZ
+    JZ,&ZZeroBackoffFinal
+    VA,,,&ZZeroBackoffFinal+&ZZeroPlateThickness
+    RETURN
+
+get_positions:
+    &zpos = %(3)
+    &homing_input_value = %(51)
+    RETURN
+
+check_input:
+    GOSUB get_positions
+    IF &homing_input_value == 1 THEN GOTO check_input_fail
+    RETURN
+
+check_input_fail:
+	END "Input switch is already tripped.  Cannot zero the tool."

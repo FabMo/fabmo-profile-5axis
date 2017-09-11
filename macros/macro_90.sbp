@@ -1,0 +1,22 @@
+'!FABMO!name:Variable Settings
+'!FABMO!description:Load Variable Settings
+' Preferred Tool Change Locations
+&ToolChangeX = 0
+&ToolChangeY = 0
+&ToolChangeZ = 3
+&ToolChangeZeroX = 0
+&ToolChangeZeroY = 0
+&ToolChangeZeroZ = 1.5
+&Tool := 0 
+
+' Z-Zero Settings
+&ZZeroInput = 1
+&ZZeroSearchDistance = -6.0
+&ZZeroSearchSpeedSlow = 0.1
+&ZZeroSearchSpeedFast = 0.5
+&ZZeroPlateThickness = 0.57 ' 0.118 for electrical plate 0.57 for pressure plate
+&ZZeroBackoffInitial = 0.2
+&ZZeroBackoffFinal = 0.5
+
+' Spindle Output
+&Spindle1Output = 1

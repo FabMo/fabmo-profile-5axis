@@ -1,0 +1,70 @@
+'!FABMO!name:Home Tool
+'!FABMO!description:Automatically Set Axis Zero for XY
+' -------- Settings Section --------
+' Values in this section may be changed to suit different homing configurations
+&homing_input = 3
+&homing_speed = 3.0
+&x_search = -38.0
+&x_search_speed = 2.5
+&x_backoff = 0.25
+
+&y_search = -26.0
+&y_backoff = 0.25
+&y_search_speed = 2.5
+
+&z_search = 8.0
+&z_backoff = -0.125
+&z_search_speed = 1.5
+
+&home_position_x = 0 
+&home_position_y = 0
+
+' -------- Main Program Section --------
+GOSUB backoff_if_needed
+GOSUB home_z
+GOSUB home_x
+GOSUB home_y
+GOSUB go_home
+
+END
+
+' -------- Subroutines --------
+' The functions in this section are called by the main program
+home_x:
+	GOSUB get_positions
+    PX,%(1)+&x_search,&x_search_speed,&homing_input
+    &switchPos = %(1)
+    JX,%(1)+&x_backoff
+	VA,0,,,,,,0,,,,,
+	RETURN
+
+home_y:
+    PY,%(2)+&y_search,&y_search_speed,&homing_input
+    JY,%(2)+&y_backoff
+	VA,,0,,,,,,0,,,,
+	RETURN
+
+home_z:
+	GOSUB get_positions
+    PZ,%(3)+&z_search,&z_search_speed,&homing_input
+    JZ,%(3)+&z_backoff
+	VA,,,,,,,,,0,,,
+	RETURN
+
+go_home:
+	J2,&home_position_x, &home_position_y
+	RETURN
+    
+get_positions:
+    &homing_input_value = %(51)
+    RETURN
+
+backoff_if_needed:
+	GOSUB get_positions
+    IF &homing_input_value == 1 THEN GOSUB backoff
+    RETURN
+    
+backoff:
+	GOSUB get_positions
+    M3,%(1)+&x_backoff,%(2)+&y_backoff,%(3)+&z_backoff
+    RETURN
